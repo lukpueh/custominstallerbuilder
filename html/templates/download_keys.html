@@ -16,12 +16,12 @@
         
     {% if has_private_keys %}
   	<tr id="private_keys">
-  	  <td><a id="download_private_keys" class="button" href="{% url 'download-keys' build_id=build_id key_type='private' %}">{% if keys_downloaded.private %}&#10003; {% endif %}Download private keys</a></td><td>You must download an archive of the private keys that were generated for new users.</td>
+      <td><a id="download_private_keys" class="button key {% if keys_downloaded.private %}checked{% endif %}" href="{% url 'download-keys' build_id=build_id key_type='private' %}">Download private keys</a></td><td>You must download an archive of the private keys that were generated for new users.</td>
   	</tr>
     {% endif %}
   
     <tr id="public_keys" {% if has_private_keys and not keys_downloaded.private %}class="hidden"{% endif %}>
-      <td><a id="download_public_keys" class="button" href="{% url 'download-keys' build_id=build_id key_type='public' %}">{% if keys_downloaded.public %}&#10003; {% endif %}Download public keys</a></td><td>It is strongly recommended that you download an archive of the public keys of all users.</td>
+      <td><a id="download_public_keys" class="button key {% if keys_downloaded.public %}checked{% endif %}" href="{% url 'download-keys' build_id=build_id key_type='public' %}">Download public keys</a></td><td>It is strongly recommended that you download an archive of the public keys of all users.</td>
     </tr>
   
   </table>
