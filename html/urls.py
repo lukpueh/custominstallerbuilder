@@ -27,6 +27,7 @@ urlpatterns = patterns('custominstallerbuilder.html.views',
   #   Example: http://example.com/custominstallerbuilder/
   #        or  http://example.com/custominstallerbuilder/ajax/build/
   url(r'^$', 'builder_page', name='builder'),
+  url(r'^fastlane/$', 'fastlane_page', name='fastlane_page'),
   url(r'^ajax/build/$', 'build_installers', name='ajax-build'),
   url(r'^ajax/save/$', 'save_state', name='ajax-save'),
   url(r'^ajax/restore/$', 'restore_state', name='ajax-restore'),

@@ -128,7 +128,7 @@ def build_installers(request):
     return ErrorReponse('No build data provided.')
     
   build_data = json.loads(request.session['build_string'])
-    
+
   user_data = {}
     
   for user in build_data['users']:
@@ -498,6 +498,101 @@ def download_installers_page(request, build_id):
     },
     context_instance=RequestContext(request)
   )
+
+
+
+
+
+def fastlane_page(request):
+  """
+  <Purpose>
+    Renders a key and installer download page for a
+    default user-built seattle build, i.e.:
+      One vessel, no users, owner name: `default`
+  <Arguments>
+    request:
+      A Django request.
+  <Exceptions>
+    None.
+  <Side Effects>
+    If new session
+    - Creates and stores vesselinfo to appropriate location on disk
+    - Stores generated key pair to session (memory)
+  <Returns>
+    A Django response.
+  """
+
+  fastlane_user_name = u'default'
+
+  try:
+    if 'build_results' in request.session.keys() and \
+        len(request.session['build_results'].values()) > 0 and \
+        request.session['build_results'].values()[0].get("fast_lane_build"):
+
+      # The session tells us the user has been here before
+      # The "fast_lane_build" attribute (set below) distinguishes
+      # the build_result from one that could have been stored to the session 
+      # by using the interactive CIB
+      # XXX LP: The other views also verify if the build_id (passed as URLparam)
+      # is in the session. Does this bring any extra security? I doubt it.
+
+      # There is no need to build again, let's serve what's already there
+      build_result = request.session['build_results'].values()[0]
+      build_id = build_result.get('build_id')
+      keys_downloaded = build_result.get('keys_downloaded', dict())
+
+      # The manager helps us to find the files stored to disk
+      manager = BuildManager(build_id=build_id)
+      installer_links = manager.get_urls()
+
+    else:
+      # The user is here for the first time
+      # Create basic installation setup (1 owner, 1 vessel, no users)
+      users = {
+        fastlane_user_name: {u'public_key': None}
+        }
+      vessels = [
+        {
+          u'owner': fastlane_user_name, 
+          u'percentage': 80, 
+          u'users': []
+        }
+      ]
+      
+      # Use build manager to create and store vesselinfo
+      # and create cryptographic key pair (only stored in memory)
+      manager = BuildManager(vessel_list=vessels, user_data=users)
+      build_results = manager.prepare()
+
+      # These are needed in the HTML template to render the proper links
+      # to the keys and installer
+      build_id = manager.build_id
+      installer_links = manager.get_urls()
+
+      # Used in template to display check marks next to buttons
+      # The keys are new so they cannot have been downloaded
+      keys_downloaded = False
+
+      build_results["fast_lane_build"] = True
+
+      # download_installer/download_keys views get the build_results
+      # from the session to serve the correct files
+      request.session['build_results'] = { 
+          build_id: build_results,
+        }
+      request.session.save()
+
+  except:
+    log_exception(request)
+    return ErrorResponse('Unknown error occured while' + \
+                         ' trying to build the installers.')
+
+  return render_to_response('download_installers.html', {
+      'fast_lane': True,
+      'build_id': build_id,
+      'installers': installer_links,
+      'keys_downloaded': keys_downloaded,
+    }, context_instance=RequestContext(request))
 
 
 

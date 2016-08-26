@@ -4,6 +4,12 @@
 <!-- Custom -->
 <link rel="stylesheet" href="{{ MEDIA_URL }}css/download_installers.css" />
 <script type="text/javascript" src="{{ MEDIA_URL}}js/qrcode.min.js"></script>
+
+{# comment: On the fast lane we have installers and keys on one page #}
+{% if fast_lane %}
+<link rel="stylesheet" href="{{ MEDIA_URL }}css/download_keys.css" />
+<script type="text/javascript" src="{{ MEDIA_URL }}js/keys.js"></script>
+{% endif %}
 {% endblock %}
 
 {% block content %}
@@ -31,6 +37,24 @@ new QRCode(document.getElementById("qrcode"), {
 });
     </script></div>
 </div>
+
+
+{% if fast_lane %}
+<div class="section">
+  <h2>Download user keys</h2>
+  <p>For your reference, the Custom Installer Builder has generated ZIP archives of cryptographic keys associated with your installer. Once your browsing session expires, you cannot access these keys again.</p>
+
+  <table>
+    <tr id="private_keys">
+      <td><a id="download_private_keys" class="button key {% if keys_downloaded.private %}checked{% endif %}" href="{% url 'download-keys' build_id=build_id key_type='private' %}">Download private keys</a></td>
+    </tr>
+    <tr id="public_keys">
+      <td><a id="download_public_keys" class="button key {% if keys_downloaded.public %}checked{% endif %}" href="{% url 'download-keys' build_id=build_id key_type='public' %}">Download public keys</a></td>
+    </tr>
+  </table>
+
+</div>
+{% endif %} {# comment: endif fast_lane #}
 
 <div class="section">
   <h2>Download installers</h2>
