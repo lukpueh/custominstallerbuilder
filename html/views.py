@@ -578,6 +578,10 @@ def fastlane_page(request):
       # The keys are new so they cannot have been downloaded
       keys_downloaded = False
 
+      # This prevents collision when using interactive CIB and fastlane CIB
+      # in the same session
+      # Also hides breadcrumbs when serving "shared" (w/o key links) fastlane 
+      # download page
       build_results["fast_lane_build"] = True
 
       # download_installer/download_keys views get the build_results
@@ -592,10 +596,16 @@ def fastlane_page(request):
     return ErrorResponse('Unknown error occured while' + \
                          ' trying to build the installers.')
 
+  # Builds share_url by using view URLreversing and the request object
+  share_url = request.build_absolute_uri(reverse('download-installers-page', 
+      args=[build_id]))
+
+
   return render_to_response('download_installers.html', {
       'fast_lane': True,
       'build_id': build_id,
       'installers': installer_links,
+      'share_url': share_url,
       'keys_downloaded': keys_downloaded,
     }, context_instance=RequestContext(request))
 
