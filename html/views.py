@@ -530,19 +530,23 @@ def fastlane_page(request):
   """
 
   try:
-    if 'build_results' in request.session.keys() and \
-        len(request.session['build_results'].values()) > 0 and \
-        request.session['build_results'].values()[0].get("fast_lane_build"):
+    build_result = False
 
-      # The session tells us the user has been here before
-      # The "fast_lane_build" attribute (set below) distinguishes
-      # the build_result from one that could have been stored to the session 
-      # by using the interactive CIB
-      # XXX LP: The other views also verify if the build_id (passed as URLparam)
-      # is in the session. Does this bring any extra security? I doubt it.
+    # We have to check if the user already has a build result in his session
+    # and make sure it's a fastlane build, i.e.
+    # it does not collide with a build from the interactive CIB
+    if 'build_results' in request.session.keys():
+      for val in request.session['build_results'].values():
+        if isinstance(val, dict) and val.get("fast_lane_build"):
+          build_result = val
+          break
+    else:
+      # This dict will only be saved if the build succeeds
+      request.session['build_result'] = {}
 
+
+    if build_result:
       # There is no need to build again, let's serve what's already there
-      build_result = request.session['build_results'].values()[0]
       build_id = build_result.get('build_id')
       keys_downloaded = build_result.get('keys_downloaded', dict())
 
@@ -580,15 +584,13 @@ def fastlane_page(request):
 
       # This prevents collision when using interactive CIB and fastlane CIB
       # in the same session
-      # Also hides breadcrumbs when serving "shared" (w/o key links) fastlane 
+      # also hides breadcrumbs when serving shared (w/o key links) fastlane 
       # download page
       build_results["fast_lane_build"] = True
 
-      # download_installer/download_keys views get the build_results
+      # download_installer and download_keys views get the build_results
       # from the session to serve the correct files
-      request.session['build_results'] = { 
-          build_id: build_results,
-        }
+      request.session['build_results'][build_id] = build_results
       request.session.save()
 
   except:
