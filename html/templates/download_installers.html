@@ -15,11 +15,13 @@
 {% block content %}
 <!-- Un-Django-comment the block below to style the page differently depending on whether the person that built this installer sees it (`user_built==True`), or the person comes in via a shared link. We currently disable this to always show a QR code for this page. -->
 {% comment %}
-<div class="section">
+<div class="section center">
   {% if user_built %}
     <h2>Your installers are ready!</h2>
     <p>Bookmark this page to come back later, or share this URL with others:</p>
-    <div id="url"><span class="round_shadow"><a href="{{ share_url }}">{{ share_url }}</a></span> Right click on the URL to copy the address.</div>
+    <div id="url"><span class="round_shadow">
+      <a href="{{ share_url }}">{{ share_url }}</a>
+    </span> Right click on the URL to copy the address.</div>
   {% else %}
     <h2>Thanks for contributing!</h2>
     <p>The installers below have been customized by a Seattle user. By running these installers, 10% of your computing resources will be donated to an experiment being run by that user.</p>
@@ -27,15 +29,17 @@
 </div>
 {% endcomment %}
 
-<div class="section">
-    <div id="url"><span class="round_shadow"><a href="{{ share_url }}">{{ share_url }}</a></span> Right-click on the URL to copy the address, or scan the QR code below.<p>
-    <div id="qrcode"></div><script type="text/javascript">
-new QRCode(document.getElementById("qrcode"), {
-    text: "{{ share_url }}",
-    width: 128,
-    height: 128
-});
-    </script></div>
+<div class="section center">
+  <a class="share-url round_shadow" href="{{ share_url }}">{{ share_url }}</a>
+  <div>Right-click on the URL to copy the address, or scan the QR code below.</div>
+  <div id="qrcode"></div>
+  <script type="text/javascript">
+    new QRCode(document.getElementById("qrcode"), {
+        text: "{{ share_url }}",
+        width: 128,
+        height: 128
+    });
+  </script>
 </div>
 
 
