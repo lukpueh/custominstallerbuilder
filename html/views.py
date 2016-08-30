@@ -487,7 +487,11 @@ def download_installers_page(request, build_id):
     if build_id in request.session['build_results']:
       step = 'installers'
       user_built = True
-    
+
+      # If we serve a fast_lane_build we don't show the breadcrumbs
+      if 'fast_lane_build' in request.session['build_results'][build_id]:
+        step = False
+
   return render_to_response('download_installers.html',
     {
       'build_id': build_id,
@@ -508,7 +512,10 @@ def fastlane_page(request):
   <Purpose>
     Renders a key and installer download page for a
     default user-built seattle build, i.e.:
-      One vessel, no users, owner name: `default`
+      One 80 per-cent vessel, one owner/user
+
+      Note: 
+      owner/user-name can be set in settings.FASTLANE_USER_NAME
   <Arguments>
     request:
       A Django request.
@@ -521,8 +528,6 @@ def fastlane_page(request):
   <Returns>
     A Django response.
   """
-
-  fastlane_user_name = u'default'
 
   try:
     if 'build_results' in request.session.keys() and \
@@ -549,11 +554,11 @@ def fastlane_page(request):
       # The user is here for the first time
       # Create basic installation setup (1 owner, 1 vessel, no users)
       users = {
-        fastlane_user_name: {u'public_key': None}
+        settings.FASTLANE_USER_NAME: {u'public_key': None}
         }
       vessels = [
         {
-          u'owner': fastlane_user_name, 
+          u'owner': settings.FASTLANE_USER_NAME, 
           u'percentage': 80, 
           u'users': []
         }
