@@ -3,9 +3,12 @@
 {% block head %}
 <!-- Custom -->
 <link rel="stylesheet" href="{{ MEDIA_URL }}css/download_installers.css" />
+<script type="text/javascript" src="{{ MEDIA_URL}}js/qrcode.min.js"></script>
 {% endblock %}
 
 {% block content %}
+<!-- Un-Django-comment the block below to style the page differently depending on whether the person that built this installer sees it (`user_built==True`), or the person comes in via a shared link. We currently disable this to always show a QR code for this page. -->
+{% comment %}
 <div class="section">
   {% if user_built %}
     <h2>Your installers are ready!</h2>
@@ -15,6 +18,18 @@
     <h2>Thanks for contributing!</h2>
     <p>The installers below have been customized by a Seattle user. By running these installers, 10% of your computing resources will be donated to an experiment being run by that user.</p>
   {% endif %}
+</div>
+{% endcomment %}
+
+<div class="section">
+    <div id="url"><span class="round_shadow"><a href="{{ share_url }}">{{ share_url }}</a></span> Right-click on the URL to copy the address, or scan the QR code below.<p>
+    <div id="qrcode"></div><script type="text/javascript">
+new QRCode(document.getElementById("qrcode"), {
+    text: "{{ share_url }}",
+    width: 128,
+    height: 128
+});
+    </script></div>
 </div>
 
 <div class="section">
@@ -47,7 +62,7 @@
         
         <p>To check that Seattle is running, try running:<br /><code>ps -ef | grep nmmain.py | grep -v grep</code></p> 
         
-        <p>Note: You must have Python 2.5 installed.</p>
+        <p>Note: You must have <a href="https://www.python.org/downloads/release/python-2712/">Python 2.7</a> installed.</p>
       </td>
     </tr>
     <tr id="mac"> 
@@ -63,7 +78,7 @@
         
         <p>To check that Seattle is running, try running:<br /><code>ps Aww | grep nmmain.py | grep -v grep</code></p> 
         
-        <p>Note: You must have Python 2.5 installed.</p>
+        <p>Note: You must have <a href="https://www.python.org/downloads/release/python-2712/">Python 2.7</a> installed.</p>
       </td> 
     </tr>
     <tr id="win"> 
