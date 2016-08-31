@@ -530,7 +530,7 @@ def fastlane_page(request):
   """
 
   try:
-    build_result = False
+    existing_build_result = False
 
     # We have to check if the user already has a build result in his session
     # and make sure it's a fastlane build, i.e.
@@ -538,17 +538,17 @@ def fastlane_page(request):
     if 'build_results' in request.session.keys():
       for val in request.session['build_results'].values():
         if isinstance(val, dict) and val.get("fast_lane_build"):
-          build_result = val
+          existing_build_result = val
           break
     else:
       # This dict will only be saved if the build succeeds
       request.session['build_results'] = {}
 
 
-    if build_result:
+    if existing_build_result:
       # There is no need to build again, let's serve what's already there
-      build_id = build_result.get('build_id')
-      keys_downloaded = build_result.get('keys_downloaded', dict())
+      build_id = existing_build_result.get('build_id')
+      keys_downloaded = existing_build_result.get('keys_downloaded', dict())
 
       # The manager helps us to find the files stored to disk
       manager = BuildManager(build_id=build_id)
@@ -571,7 +571,7 @@ def fastlane_page(request):
       # Use build manager to create and store vesselinfo
       # and create cryptographic key pair (only stored in memory)
       manager = BuildManager(vessel_list=vessels, user_data=users)
-      build_results = manager.prepare()
+      new_fastlane_build_results = manager.prepare()
 
       # These are needed in the HTML template to render the proper links
       # to the keys and installer
@@ -586,11 +586,11 @@ def fastlane_page(request):
       # in the same session
       # also hides breadcrumbs when serving shared (w/o key links) fastlane 
       # download page
-      build_results["fast_lane_build"] = True
+      new_fastlane_build_results["fast_lane_build"] = True
 
       # download_installer and download_keys views get the build_results
       # from the session to serve the correct files
-      request.session['build_results'][build_id] = build_results
+      request.session['build_results'][build_id] = new_fastlane_build_results
       request.session.save()
 
   except:
