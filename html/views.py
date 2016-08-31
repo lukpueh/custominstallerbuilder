@@ -542,7 +542,7 @@ def fastlane_page(request):
           break
     else:
       # This dict will only be saved if the build succeeds
-      request.session['build_result'] = {}
+      request.session['build_results'] = {}
 
 
     if build_result:
