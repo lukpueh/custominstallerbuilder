@@ -32,19 +32,14 @@ $(document).ready(function () {
 function addCheck(button) {
   /*****************************************************************
   <Purpose>
-    Adds a check mark to the button if one is not already there.
+    Adds class "checked" to  button (passed as argument) to display
+    a lovely unicode check mark in front of the button text using
+    the :before pseudo element
   <Arguments>
     button:
       A button DOM element.
-  <Side Effects>
-    Puts a lovely unicode check mark in front of the button text.
   <Returns>
     None.
   *****************************************************************/
-  
-  if ($(button).text().search(new RegExp(/[\u2713]/i)) != -1) {
-    return;
-  }
-  
-  $(button).html('&#10003; ' + $(button).html());
+  $(button).addClass('checked');
 }

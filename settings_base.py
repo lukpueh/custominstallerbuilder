@@ -130,3 +130,5 @@ CUSTOM_INSTALLER_URL = PROJECT_URL + 'static/installers/'
 # During testing, you may want to use Django's built-in static file server.
 SERVE_STATIC = False
 STATIC_BASE = 'static/'
+
+FASTLANE_USER_NAME = 'user'

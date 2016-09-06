@@ -13,26 +13,32 @@
   Installer Builder.
 *****************************************************************/
 
-#url {
-  margin: 2em 0 2em 5%;
-}
 
-#url span {
-  border: 1px solid #f7e7ad;
-  
-  background-color: #fdf3d0;
-  margin: 0.4em;
+
+.share-url {
+  display: inline-block;
   padding: 0.4em;
-  
+  margin: 0.4em;
+
+  background-color: #fdf3d0;
+  text-decoration: none;
+
+  border: 1px solid #f7e7ad;
   -webkit-border-radius: 2px;
   -moz-border-radius: 2px;
   border-radius: 2px;
+
+  /* Break line on small screen */
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  -ms-word-break: break-all;
+  word-break: break-all;
 }
 
-#url a {
-  text-decoration: none;
-  color: inherit;
+#qrcode img {
+  margin: 2em auto;
 }
+
 
 table#downloads {
   margin-left: 5%;

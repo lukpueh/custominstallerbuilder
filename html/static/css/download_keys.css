@@ -16,3 +16,16 @@
 table {
   margin-left: 5%;
 }
+
+.button.key {
+  width: 230px;
+}
+.button.key:before,
+.button.key:after {
+  content: "";
+  display: inline-block;
+  width: 2em;
+}
+.button.key.checked:before {
+  content: "\2713";
+}
