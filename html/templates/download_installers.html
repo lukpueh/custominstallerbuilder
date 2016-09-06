@@ -3,19 +3,62 @@
 {% block head %}
 <!-- Custom -->
 <link rel="stylesheet" href="{{ MEDIA_URL }}css/download_installers.css" />
+<script type="text/javascript" src="{{ MEDIA_URL}}js/qrcode.min.js"></script>
+
+{# comment: On the fast lane we have installers and keys on one page #}
+{% if fast_lane %}
+<link rel="stylesheet" href="{{ MEDIA_URL }}css/download_keys.css" />
+<script type="text/javascript" src="{{ MEDIA_URL }}js/keys.js"></script>
+{% endif %}
 {% endblock %}
 
 {% block content %}
-<div class="section">
+<!-- Un-Django-comment the block below to style the page differently depending on whether the person that built this installer sees it (`user_built==True`), or the person comes in via a shared link. We currently disable this to always show a QR code for this page. -->
+{% comment %}
+<div class="section center">
   {% if user_built %}
     <h2>Your installers are ready!</h2>
     <p>Bookmark this page to come back later, or share this URL with others:</p>
-    <div id="url"><span class="round_shadow"><a href="{{ share_url }}">{{ share_url }}</a></span> Right click on the URL to copy the address.</div>
+    <div id="url"><span class="round_shadow">
+      <a href="{{ share_url }}">{{ share_url }}</a>
+    </span> Right click on the URL to copy the address.</div>
   {% else %}
     <h2>Thanks for contributing!</h2>
     <p>The installers below have been customized by a Seattle user. By running these installers, 10% of your computing resources will be donated to an experiment being run by that user.</p>
   {% endif %}
 </div>
+{% endcomment %}
+
+<div class="section center">
+  <a class="share-url round_shadow" href="{{ share_url }}">{{ share_url }}</a>
+  <div>Right-click on the URL to copy the address, or scan the QR code below.</div>
+  <div id="qrcode"></div>
+  <script type="text/javascript">
+    new QRCode(document.getElementById("qrcode"), {
+        text: "{{ share_url }}",
+        width: 128,
+        height: 128
+    });
+  </script>
+</div>
+
+
+{% if fast_lane %}
+<div class="section">
+  <h2>Download user keys</h2>
+  <p>For your reference, the Custom Installer Builder has generated ZIP archives of cryptographic keys associated with your installer. Once your browsing session expires, you cannot access these keys again.</p>
+
+  <table>
+    <tr id="private_keys">
+      <td><a id="download_private_keys" class="button key {% if keys_downloaded.private %}checked{% endif %}" href="{% url 'download-keys' build_id=build_id key_type='private' %}">Download private keys</a></td>
+    </tr>
+    <tr id="public_keys">
+      <td><a id="download_public_keys" class="button key {% if keys_downloaded.public %}checked{% endif %}" href="{% url 'download-keys' build_id=build_id key_type='public' %}">Download public keys</a></td>
+    </tr>
+  </table>
+
+</div>
+{% endif %} {# comment: endif fast_lane #}
 
 <div class="section">
   <h2>Download installers</h2>
@@ -23,31 +66,38 @@
   
   <table id="downloads"> 
   <tr id="android">
-      <td><a href="market://details?id=com.seattletestbed&referrer=utm_source%3D{{ installers.android }}%26utm_medium%3Ddownload%26utm_content%3Dcustom_builder%26utm_campaign%3Dseattle?"><img src="{{ MEDIA_URL }}/img/android.png" alt="android" /></a><br /><a class="button" href="market://details?id=com.seattletestbed&referrer=utm_source%3D{{ installers.android }}%26utm_medium%3Ddownload%26utm_content%3Dcustom_builder%26utm_campaign%3Dseattle?">Install via<br />Google Play</a></td> 
+      <td>
+<a href="market://details?id=com.sensibility_testbed&referrer=utm_source%3D{{ installers.android }}%26utm_medium%3Ddownload%26utm_content%3Dcustom_builder%26utm_campaign%3Dseattle?"><img src="{{ MEDIA_URL }}/img/android.png" alt="android" /></a><br /><a class="button" href="market://details?id=com.sensibility_testbed&referrer=utm_source%3D{{ installers.android }}%26utm_medium%3Ddownload%26utm_content%3Dcustom_builder%26utm_campaign%3Dseattle?">Install via<br />Google Play</a></td> 
       <td>
         <p><strong>Android instructions</strong></p>
         <ol> 
-          <li>On your Android device, tap the icon to the left to download Seattle Testbed via Google Play. (If that doesn't work, please try <a href="https://play.google.com/store/apps/details?id=com.seattletestbed&referrer=utm_source%3D{{ installers.android }}%26utm_medium%3Ddownload%26utm_content%3Dcustom_builder%26utm_campaign%3Dseattle?">this alternative link</a>.)</li> 
+        <li>Open this web page on your Android device.
+        <li>Install SL4A which is a library that Sensibility Testbed requires. SL4A is available from <a href="https://android-scripting.googlecode.com/files/sl4a_r6.apk">Google Code</a>.</li>
+         <li>If your device is running a version of Android below 5 (&quot;Lollipop&quot;), tap the &quot;Android&quot; icon to the left to download Sensibility Testbed via Google Play. (If that doesn't work, please try <a href="https://play.google.com/store/apps/details?id=com.sensibility_testbed&referrer=utm_source%3D{{ installers.android }}%26utm_medium%3Ddownload%26utm_content%3Dcustom_builder%26utm_campaign%3Dseattle?">this alternative link</a>.)</li>
+         <li>If you are running Android 5 (&quot;Lollipop&quot;) or 6 (&quot;Marshmallow&quot;), please use our <a href="market://details?id=com.sensibility_testbed_BETA&referrer=utm_source%3D{{ installers.android }}%26utm_medium%3Ddownload%26utm_content%3Dcustom_builder%26utm_campaign%3Dseattle?">updated BETA installer</a>!</li>
           <li>In the Google Play app, tap Install and review the requested permissions.</li> 
           <li>Start the app and follow the on-screen instructions to complete the installation. Depending on the speed of your device, the process can take a few minutes to finish.</li> 
         </ol>
-        <p>To check that Seattle is running, look at the Seattle on Android application window.</code></p> 
+        <p>To check that Sensibility Testbed is running, look at the Sensibility Testbed application window.</code></p> 
+<br />
       </td>
     </tr>
+    <tr id="spacer"><td><hr></td><td><hr></td></tr>
+    <tr id="spacer"><td><strong>Note</strong></td><td><strong>Sensibility Testbed currently does not support sensor access on the platforms listed below!</strong><br>You may still install Sensibility Testbed to run non-sensor related code.</td></tr>
     <tr id="linux"> 
       <td><a href="{{ installers.linux }}"><img src="{{ MEDIA_URL }}/img/linux.png" alt="linux" /></a><br /><a class="button" href="{{ installers.linux }}">Download installer<br />for Linux</a></td> 
       <td>
         <p><strong>Linux instructions</strong></p>
         
         <ol> 
-          <li>Download the Seattle tarball to your computer.</li> 
-          <li>Extract the tarball to the directory in which you would like to install Seattle.</li> 
+          <li>Download the Sensibility Testbed tarball to your computer.</li> 
+          <li>Extract the tarball to the directory in which you would like to install Sensibility Testbed.</li> 
           <li>Navigate to that directory and run <code>./install.sh</code></li> 
         </ol>
         
-        <p>To check that Seattle is running, try running:<br /><code>ps -ef | grep nmmain.py | grep -v grep</code></p> 
+        <p>To check that Sensibility Testbed is running, try running:<br /><code>ps -ef | grep nmmain.py | grep -v grep</code></p> 
         
-        <p>Note: You must have Python 2.5 installed.</p>
+        <p>Note: You must have <a href="https://www.python.org/downloads/release/python-2712/">Python 2.7</a> installed.</p>
       </td>
     </tr>
     <tr id="mac"> 
@@ -56,14 +106,14 @@
         <p><strong>Mac instructions</strong></p>
         
         <ol> 
-          <li>Download the Seattle tarball to your computer.</li> 
-          <li>Extract the tarball to the directory in which you would like to install Seattle.</li> 
+          <li>Download the Sensibility Testbed tarball to your computer.</li> 
+          <li>Extract the tarball to the directory in which you would like to install Sensibility Testbed.</li> 
           <li>Navigate to that directory and run <code>./install.sh</code></li> 
         </ol>
         
-        <p>To check that Seattle is running, try running:<br /><code>ps Aww | grep nmmain.py | grep -v grep</code></p> 
+        <p>To check that Sensibility Testbed is running, try running:<br /><code>ps Aww | grep nmmain.py | grep -v grep</code></p> 
         
-        <p>Note: You must have Python 2.5 installed.</p>
+        <p>Note: You must have <a href="https://www.python.org/downloads/release/python-2712/">Python 2.7</a> installed.</p>
       </td> 
     </tr>
     <tr id="win"> 
@@ -72,12 +122,12 @@
         <p><strong>Windows instructions</strong></p>
         
         <ol> 
-          <li>Download the Seattle ZIP file to your computer.</li> 
-          <li>Extract the ZIP file to the directory in which you would like to install Seattle.</li> 
+          <li>Download the Sensibility Testbed ZIP file to your computer.</li> 
+          <li>Extract the ZIP file to the directory in which you would like to install Sensibility Testbed.</li> 
           <li>Double-click <code>install.bat</code> or run it from the command line.</li> 
         </ol>
         
-        <p>To check that Seattle is running, look in Task Manager for the process pythonw.exe.</p>
+        <p>To check that Sensibility Testbed is running, look in Task Manager for the process pythonw.exe.</p>
       </td> 
     </tr>
   </table>

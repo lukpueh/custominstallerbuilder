@@ -14,7 +14,7 @@
   initiates a static file server if local settings call for it.
 """
 
-from django.conf.urls.defaults import include, patterns, url
+from django.conf.urls import include, patterns, url
 from django.conf import settings
 
 

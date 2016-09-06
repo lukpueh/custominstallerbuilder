@@ -92,7 +92,7 @@ def package_installers(working_dir, build_platforms):
       
   # The directory which holds the files to be added to the bundles, specified
   # both relative to the working directory and with an absolute path.
-  config_dir_rel = os.path.join('.', constants.TEMP_DIR_NAMES['config'])
+  config_dir_rel = constants.TEMP_DIR_NAMES['config']
   config_dir_abs = os.path.join(working_dir, constants.TEMP_DIR_NAMES['config'])
   
   # Create that directory if it doesn't exist already.

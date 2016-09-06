@@ -13,7 +13,7 @@
   Custom Installer Builder.
 """
 
-from django.conf.urls.defaults import patterns, url
+from django.conf.urls import patterns, url
 
 
 # Note: All URLs that have been delegated to these patterns have already

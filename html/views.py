@@ -18,7 +18,13 @@ import os
 import sys
 import tempfile
 
-import simplejson as json
+# The reasons for wanting simplejson as json seem lost in time.
+# Let's try our best to have some JSON support!
+try:
+  import simplejson as json
+except ImportError:
+  import json
+
 from django.conf import settings
 from django.core.servers.basehttp import FileWrapper
 from django.core.urlresolvers import reverse
@@ -122,7 +128,7 @@ def build_installers(request):
     return ErrorReponse('No build data provided.')
     
   build_data = json.loads(request.session['build_string'])
-    
+
   user_data = {}
     
   for user in build_data['users']:
@@ -481,7 +487,11 @@ def download_installers_page(request, build_id):
     if build_id in request.session['build_results']:
       step = 'installers'
       user_built = True
-    
+
+      # If we serve a fast_lane_build we don't show the breadcrumbs
+      if 'fast_lane_build' in request.session['build_results'][build_id]:
+        step = False
+
   return render_to_response('download_installers.html',
     {
       'build_id': build_id,
@@ -492,6 +502,114 @@ def download_installers_page(request, build_id):
     },
     context_instance=RequestContext(request)
   )
+
+
+
+
+
+def fastlane_page(request):
+  """
+  <Purpose>
+    Renders a key and installer download page for a
+    default user-built seattle build, i.e.:
+      One 80 per-cent vessel, one owner/user
+
+      Note: 
+      owner/user-name can be set in settings.FASTLANE_USER_NAME
+  <Arguments>
+    request:
+      A Django request.
+  <Exceptions>
+    None.
+  <Side Effects>
+    If new session
+    - Creates and stores vesselinfo to appropriate location on disk
+    - Stores generated key pair to session (memory)
+  <Returns>
+    A Django response.
+  """
+
+  try:
+    existing_build_result = False
+
+    # We have to check if the user already has a build result in his session
+    # and make sure it's a fastlane build, i.e.
+    # it does not collide with a build from the interactive CIB
+    if 'build_results' in request.session.keys():
+      for val in request.session['build_results'].values():
+        if isinstance(val, dict) and val.get("fast_lane_build"):
+          existing_build_result = val
+          break
+    else:
+      # This dict will only be saved if the build succeeds
+      request.session['build_results'] = {}
+
+
+    if existing_build_result:
+      # There is no need to build again, let's serve what's already there
+      build_id = existing_build_result.get('build_id')
+      keys_downloaded = existing_build_result.get('keys_downloaded', dict())
+
+      # The manager helps us to find the files stored to disk
+      manager = BuildManager(build_id=build_id)
+      installer_links = manager.get_urls()
+
+    else:
+      # The user is here for the first time
+      # Create basic installation setup (1 owner, 1 vessel, no users)
+      users = {
+        settings.FASTLANE_USER_NAME: {u'public_key': None}
+        }
+      vessels = [
+        {
+          u'owner': settings.FASTLANE_USER_NAME, 
+          u'percentage': 80, 
+          u'users': []
+        }
+      ]
+      
+      # Use build manager to create and store vesselinfo
+      # and create cryptographic key pair (only stored in memory)
+      manager = BuildManager(vessel_list=vessels, user_data=users)
+      new_fastlane_build_results = manager.prepare()
+
+      # These are needed in the HTML template to render the proper links
+      # to the keys and installer
+      build_id = manager.build_id
+      installer_links = manager.get_urls()
+
+      # Used in template to display check marks next to buttons
+      # The keys are new so they cannot have been downloaded
+      keys_downloaded = False
+
+      # This prevents collision when using interactive CIB and fastlane CIB
+      # in the same session
+      # also hides breadcrumbs when serving shared (w/o key links) fastlane 
+      # download page
+      new_fastlane_build_results["fast_lane_build"] = True
+
+      # download_installer and download_keys views get the build_results
+      # from the session to serve the correct files
+      request.session['build_results'][build_id] = new_fastlane_build_results
+      request.session.save()
+
+  except:
+    log_exception(request)
+    return ErrorResponse('Unknown error occured while' + \
+                         ' trying to build the installers.')
+
+  # Builds share_url by using view URLreversing and the request object
+  share_url = request.build_absolute_uri(reverse('download-installers-page', 
+      args=[build_id]))
+
+
+  return render_to_response('download_installers.html', {
+      'fast_lane': True,
+      'build_id': build_id,
+      'installers': installer_links,
+      'share_url': share_url,
+      'keys_downloaded': keys_downloaded,
+    }, context_instance=RequestContext(request))
 
 
 

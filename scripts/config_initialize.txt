@@ -1,0 +1,22 @@
+# These are custominstallerbuilder's dependencies. They are essentially 
+# everything that is required to build a Seattle base installer (including 
+# support for RepyV1 and RepyV2, a nodemanager, Affix, and a softwareupdater).
+#
+# Note that there is no config_build.txt, as build.py can't currently be 
+# used to build a base installer, as this requires copying stuff to 
+# subdirectories of the target dir.
+#
+# See the installation instructions at 
+# https://github.com/SeattleTestbed/custominstallerbuilder/wiki/
+https://github.com/SeattleTestbed/repy_v1 ../DEPENDENCIES/repy_v1
+https://github.com/SeattleTestbed/repy_v2 ../DEPENDENCIES/repy_v2
+https://github.com/SeattleTestbed/seattlelib_v1 ../DEPENDENCIES/seattlelib_v1
+https://github.com/SeattleTestbed/seattlelib_v2 ../DEPENDENCIES/seattlelib_v2
+https://github.com/SeattleTestbed/nodemanager ../DEPENDENCIES/nodemanager
+https://github.com/SeattleTestbed/softwareupdater ../DEPENDENCIES/softwareupdater
+https://github.com/SeattleTestbed/portability ../DEPENDENCIES/portability
+https://github.com/SeattleTestbed/affix.git ../DEPENDENCIES/affix
+https://github.com/SeattleTestbed/seash.git ../DEPENDENCIES/seash
+https://github.com/SeattleTestbed/resource.git ../DEPENDENCIES/resource
+https://github.com/SeattleTestbed/common ../DEPENDENCIES/common
+https://github.com/SeattleTestbed/dist ../DEPENDENCIES/dist

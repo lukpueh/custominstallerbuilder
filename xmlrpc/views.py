@@ -56,6 +56,6 @@ def xmlrpc_handler(request):
     xmlrpc_handler.register_instance(PublicFunctions())
   
     response = HttpResponse(mimetype='application/xml')
-    response.write(xmlrpc_handler._marshaled_dispatch(request.raw_post_data))
+    response.write(xmlrpc_handler._marshaled_dispatch(request.body))
     
   return response

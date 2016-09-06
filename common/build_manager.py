@@ -30,9 +30,10 @@ import custominstallerbuilder.common.validations as validations
 
 # Import Repy module to generate cryptographic keys. This requires that the
 # Seattle standard library is within the Python path.
-import repyhelper
-repyhelper.translate_and_import('rsa.repy')
+from repyportability import *
+add_dy_support(locals())
 
+dy_import_module_symbols("rsa.r2py")
 
 class BuildManager:
   """

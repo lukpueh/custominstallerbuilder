@@ -32,7 +32,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 )
 
 TEMPLATE_LOADERS = (
-  'django.template.loaders.app_directories.load_template_source',
+  'django.template.loaders.app_directories.Loader',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -107,7 +107,7 @@ TEMPLATE_DEBUG = DEBUG
 
 SECRET_KEY = '***** This should be changed to a random string *****'
 
-ADMINS = (('Seattle developers', 'seattle-devel@cs.washington.edu'),)
+ADMINS = (('Seattle developers', 'seattle-devel@googlegroups.com'),)
 MANAGERS = ADMINS
 
 TIME_ZONE = 'America/Los_Angeles'
@@ -130,3 +130,5 @@ CUSTOM_INSTALLER_URL = PROJECT_URL + 'static/installers/'
 # During testing, you may want to use Django's built-in static file server.
 SERVE_STATIC = False
 STATIC_BASE = 'static/'
+
+FASTLANE_USER_NAME = 'user'
