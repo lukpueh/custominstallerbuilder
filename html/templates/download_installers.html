@@ -66,29 +66,36 @@
   
   <table id="downloads"> 
   <tr id="android">
-      <td><a href="market://details?id=com.seattletestbed&referrer=utm_source%3D{{ installers.android }}%26utm_medium%3Ddownload%26utm_content%3Dcustom_builder%26utm_campaign%3Dseattle?"><img src="{{ MEDIA_URL }}/img/android.png" alt="android" /></a><br /><a class="button" href="market://details?id=com.seattletestbed&referrer=utm_source%3D{{ installers.android }}%26utm_medium%3Ddownload%26utm_content%3Dcustom_builder%26utm_campaign%3Dseattle?">Install via<br />Google Play</a></td> 
+      <td>
+<a href="market://details?id=com.sensibility_testbed&referrer=utm_source%3D{{ installers.android }}%26utm_medium%3Ddownload%26utm_content%3Dcustom_builder%26utm_campaign%3Dseattle?"><img src="{{ MEDIA_URL }}/img/android.png" alt="android" /></a><br /><a class="button" href="market://details?id=com.sensibility_testbed&referrer=utm_source%3D{{ installers.android }}%26utm_medium%3Ddownload%26utm_content%3Dcustom_builder%26utm_campaign%3Dseattle?">Install via<br />Google Play</a></td> 
       <td>
         <p><strong>Android instructions</strong></p>
         <ol> 
-          <li>On your Android device, tap the icon to the left to download Seattle Testbed via Google Play. (If that doesn't work, please try <a href="https://play.google.com/store/apps/details?id=com.seattletestbed&referrer=utm_source%3D{{ installers.android }}%26utm_medium%3Ddownload%26utm_content%3Dcustom_builder%26utm_campaign%3Dseattle?">this alternative link</a>.)</li> 
+        <li>Open this web page on your Android device.
+        <li>Install SL4A which is a library that Sensibility Testbed requires. SL4A is available from <a href="https://android-scripting.googlecode.com/files/sl4a_r6.apk">Google Code</a>.</li>
+         <li>If your device is running a version of Android below 5 (&quot;Lollipop&quot;), tap the &quot;Android&quot; icon to the left to download Sensibility Testbed via Google Play. (If that doesn't work, please try <a href="https://play.google.com/store/apps/details?id=com.sensibility_testbed&referrer=utm_source%3D{{ installers.android }}%26utm_medium%3Ddownload%26utm_content%3Dcustom_builder%26utm_campaign%3Dseattle?">this alternative link</a>.)</li>
+         <li>If you are running Android 5 (&quot;Lollipop&quot;) or 6 (&quot;Marshmallow&quot;), please use our <a href="market://details?id=com.sensibility_testbed_BETA&referrer=utm_source%3D{{ installers.android }}%26utm_medium%3Ddownload%26utm_content%3Dcustom_builder%26utm_campaign%3Dseattle?">updated BETA installer</a>!</li>
           <li>In the Google Play app, tap Install and review the requested permissions.</li> 
           <li>Start the app and follow the on-screen instructions to complete the installation. Depending on the speed of your device, the process can take a few minutes to finish.</li> 
         </ol>
-        <p>To check that Seattle is running, look at the Seattle on Android application window.</code></p> 
+        <p>To check that Sensibility Testbed is running, look at the Sensibility Testbed application window.</code></p> 
+<br />
       </td>
     </tr>
+    <tr id="spacer"><td><hr></td><td><hr></td></tr>
+    <tr id="spacer"><td><strong>Note</strong></td><td><strong>Sensibility Testbed currently does not support sensor access on the platforms listed below!</strong><br>You may still install Sensibility Testbed to run non-sensor related code.</td></tr>
     <tr id="linux"> 
       <td><a href="{{ installers.linux }}"><img src="{{ MEDIA_URL }}/img/linux.png" alt="linux" /></a><br /><a class="button" href="{{ installers.linux }}">Download installer<br />for Linux</a></td> 
       <td>
         <p><strong>Linux instructions</strong></p>
         
         <ol> 
-          <li>Download the Seattle tarball to your computer.</li> 
-          <li>Extract the tarball to the directory in which you would like to install Seattle.</li> 
+          <li>Download the Sensibility Testbed tarball to your computer.</li> 
+          <li>Extract the tarball to the directory in which you would like to install Sensibility Testbed.</li> 
           <li>Navigate to that directory and run <code>./install.sh</code></li> 
         </ol>
         
-        <p>To check that Seattle is running, try running:<br /><code>ps -ef | grep nmmain.py | grep -v grep</code></p> 
+        <p>To check that Sensibility Testbed is running, try running:<br /><code>ps -ef | grep nmmain.py | grep -v grep</code></p> 
         
         <p>Note: You must have <a href="https://www.python.org/downloads/release/python-2712/">Python 2.7</a> installed.</p>
       </td>
@@ -99,12 +106,12 @@
         <p><strong>Mac instructions</strong></p>
         
         <ol> 
-          <li>Download the Seattle tarball to your computer.</li> 
-          <li>Extract the tarball to the directory in which you would like to install Seattle.</li> 
+          <li>Download the Sensibility Testbed tarball to your computer.</li> 
+          <li>Extract the tarball to the directory in which you would like to install Sensibility Testbed.</li> 
           <li>Navigate to that directory and run <code>./install.sh</code></li> 
         </ol>
         
-        <p>To check that Seattle is running, try running:<br /><code>ps Aww | grep nmmain.py | grep -v grep</code></p> 
+        <p>To check that Sensibility Testbed is running, try running:<br /><code>ps Aww | grep nmmain.py | grep -v grep</code></p> 
         
         <p>Note: You must have <a href="https://www.python.org/downloads/release/python-2712/">Python 2.7</a> installed.</p>
       </td> 
@@ -115,12 +122,12 @@
         <p><strong>Windows instructions</strong></p>
         
         <ol> 
-          <li>Download the Seattle ZIP file to your computer.</li> 
-          <li>Extract the ZIP file to the directory in which you would like to install Seattle.</li> 
+          <li>Download the Sensibility Testbed ZIP file to your computer.</li> 
+          <li>Extract the ZIP file to the directory in which you would like to install Sensibility Testbed.</li> 
           <li>Double-click <code>install.bat</code> or run it from the command line.</li> 
         </ol>
         
-        <p>To check that Seattle is running, look in Task Manager for the process pythonw.exe.</p>
+        <p>To check that Sensibility Testbed is running, look in Task Manager for the process pythonw.exe.</p>
       </td> 
     </tr>
   </table>
