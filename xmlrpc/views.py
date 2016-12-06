@@ -55,7 +55,7 @@ def xmlrpc_handler(request):
     xmlrpc_handler = CGIXMLRPCRequestHandler(allow_none=False, encoding=None)
     xmlrpc_handler.register_instance(PublicFunctions())
   
-    response = HttpResponse(mimetype='application/xml')
+    response = HttpResponse(content_type='application/xml')
     response.write(xmlrpc_handler._marshaled_dispatch(request.body))
     
   return response

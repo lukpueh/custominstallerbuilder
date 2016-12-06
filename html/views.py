@@ -91,10 +91,10 @@ def require_post(function):
 ######################
 
 def TextResponse(message=''):
-  return HttpResponse(message, mimetype='text/plain')
+  return HttpResponse(message, content_type='text/plain')
 
 def ErrorResponse(message=''):
-  return HttpResponse(message, status=500, mimetype='text/plain')
+  return HttpResponse(message, status=500, content_type='text/plain')
 
 
 
