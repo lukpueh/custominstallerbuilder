@@ -26,9 +26,9 @@ except ImportError:
   import json
 
 from django.conf import settings
-from django.core.servers.basehttp import FileWrapper
 from django.core.urlresolvers import reverse
-from django.http import Http404, HttpResponse, HttpResponseRedirect
+from django.http import Http404, HttpResponse, HttpResponseRedirect, \
+    FileResponse
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 
@@ -352,7 +352,9 @@ def download_keys(request, build_id, key_type):
   # Generally, it is undesirable to serve files directly through django, but
   # the key bundles should be very small and still download quickly.
   bundle_filename = key_filenames[key_type]
-  response = HttpResponse(FileWrapper(file(bundle_filename)), content_type='application/zip')
+  # FileResponse is a subclass of StreamingHttpResponse optimized
+  # for binary files requires  Django >1.8
+  response = FileResponse(open(bundle_filename), content_type='application/zip')
   response['Content-Disposition'] = 'attachment; filename=' + os.path.split(bundle_filename)[1]
   response['Content-Length'] = os.path.getsize(bundle_filename)
   
