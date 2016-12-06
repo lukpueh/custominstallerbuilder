@@ -25,26 +25,39 @@ LANGUAGE_CODE = 'en-us'
 
 ROOT_URLCONF = 'custominstallerbuilder.urls'
 
-TEMPLATE_CONTEXT_PROCESSORS = (
-  'django.core.context_processors.debug',
-  'django.core.context_processors.media',
-  'django.core.context_processors.request',
-)
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                # Adds 'debug' and 'sql_queries' to template context
+                #'django.template.context_processors.debug',
+                # Adds 'LANGUAGES' and 'LANGUAGE_CODE' to template context
+                # 'django.template.context_processors.i18n',
+                'django.template.context_processors.media',
+                # Adds 'STATIC_URL' to template context
+                # 'django.template.context_processors.static',
+                # Adds 'TIME_ZONE' to template context
+                # 'django.template.context_processors.tz',
+                # Adds 'request' to template context
+                # 'django.template.context_processors.request',
+                # Adds 'messages' and 'DEFAULT_MESSAGE_LEVELS' to context
+                #'django.contrib.messages.context_processors.messages',
+            ],
+        },
+    },
+]
 
-TEMPLATE_LOADERS = (
-  'django.template.loaders.app_directories.Loader',
-)
 
 MIDDLEWARE_CLASSES = (
   'django.middleware.common.CommonMiddleware',
   'django.contrib.sessions.middleware.SessionMiddleware',
-  
   'custominstallerbuilder.common.logging.AutoLogger',
 )
 
 INSTALLED_APPS = (
   'django.contrib.sessions',
-  
   'custominstallerbuilder.common',
   'custominstallerbuilder.html',
   'custominstallerbuilder.xmlrpc',
@@ -103,7 +116,6 @@ RESERVED_PUBLIC_KEY = ('22599311712094481841033180665237806588790054310631' +
 
 # Unless you are actively debugging, these should be set to False.
 DEBUG = False
-TEMPLATE_DEBUG = DEBUG
 
 SECRET_KEY = '***** This should be changed to a random string *****'
 
