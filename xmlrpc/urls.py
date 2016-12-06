@@ -13,15 +13,17 @@
   Custom Installer Builder.
 """
 
-from django.conf.urls import patterns, url
+from django.conf.urls import url
+import custominstallerbuilder.xmlrpc.views as views
+
 
 
 # Note: All URLs that have been delegated to these patterns have already
 # matched the '^xmlrpc/' prefix. These patterns test against the rest of the
 # URL string.
 
-urlpatterns = patterns('',
+urlpatterns = [
   # Matches the empty string.
   #   Example: http://example.com/custominstallerbuilder/xmlrpc/
-  url(r'^$', 'custominstallerbuilder.xmlrpc.views.xmlrpc_handler', name='xmlrpc-handler'),
-)
+  url(r'^$', views.xmlrpc_handler, name='xmlrpc-handler'),
+]
