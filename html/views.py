@@ -137,8 +137,8 @@ def build_installers(request):
   try:
     manager = BuildManager(vessel_list=build_data['vessels'], user_data=user_data)
     build_results = manager.prepare()
-  except validations.ValidationError, e:
-    return ErrorResponse(e.message)
+  except validations.ValidationError as e:
+    return ErrorResponse(e)
   except:
     log_exception(request)
     return ErrorResponse('Unknown error occured while trying to build the installers.')
@@ -271,8 +271,8 @@ def add_user(request):
     if public_key is not None:
       validations.validate_public_key(public_key)
         
-  except validations.ValidationError, e:
-    return ErrorResponse(e.message)
+  except validations.ValidationError as e:
+    return ErrorResponse(e)
   except:
     log_exception(request)
     return ErrorResponse('Unknown error occured while trying to add user.')
