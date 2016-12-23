@@ -8,8 +8,8 @@ echo ""
 echo "###########################"
 echo "## Remove existing installer-packaging and base installers in $PWD"
 rm -rf installer-packaging
-rm -rf /Users/lukp/cib/custominstallerbuilder/html/static/installers/old_base_installers/*
-rm -rf /Users/lukp/cib/custominstallerbuilder/html/static/installers/base/*;
+rm -rf custominstallerbuilder/html/static/installers/old_base_installers/*
+rm -rf cib/custominstallerbuilder/html/static/installers/base/*;
 rm -f *.link
 rm -f linux_root.layout
 
@@ -89,7 +89,6 @@ mv installer-packaging/RUNNABLE/pre-build-file-edit.link .
 mv installer-packaging/RUNNABLE/build-base-installers.link .
 tar cf linux_seattle.in_toto_bundle.tar *.link albert.pub linux_root.layout
 cp linux_seattle.in_toto_bundle.tar custominstallerbuilder/html/static/in-toto/
-cp linux_seattle.in_toto_bundle.tar tmp/
 
 
 # On client

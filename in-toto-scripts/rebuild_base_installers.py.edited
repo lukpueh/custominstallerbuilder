@@ -54,13 +54,13 @@
 # Customize the variables below to your setup / config!
 
 software_update_url = 'http://seattle.cs.washington.edu/couvb/updatesite/0.1/'
-public_key_file = '/Users/lukp/cib/cib.publickey'
-private_key_file = '/Users/lukp/cib/cib.privatekey'
+public_key_file = '/home/cib/cib.publickey'
+private_key_file = '/home/cib/cib.privatekey'
 
-base_installer_directory = '/Users/lukp/cib/custominstallerbuilder/html/static/installers/base/'
-base_installer_archive_dir = '/Users/lukp/cib/custominstallerbuilder/html/static/installers/old_base_installers/'
+base_installer_directory = '/home/cib/custominstallerbuilder/html/static/installers/base/'
+base_installer_archive_dir = '/home/cib/custominstallerbuilder/html/static/installers/old_base_installers/'
 
-user = 'lukp'
+user = 'cib'
 
 # End of customizable config items
 ###########################################################
@@ -170,11 +170,11 @@ def rebuild_base_installers(newversion):
     print "The base installers don't appear to have been created."
     sys.exit(1)
 
-  # uid = pwd.getpwnam(user).pw_uid
-  # gid = grp.getgrnam(user).gr_gid
-  # for files in glob.glob('./seattle_*'):
-  #   if os.path.isfile(files):
-  #     os.chown(files, uid, gid)
+  uid = pwd.getpwnam(user).pw_uid
+  gid = grp.getgrnam(user).gr_gid
+  for files in glob.glob('./seattle_*'):
+    if os.path.isfile(files):
+      os.chown(files, uid, gid)
 
   os.symlink("seattle_" + version + "_android.zip", 'seattle_android.zip')
   os.symlink("seattle_" + version + "_linux.tgz", 'seattle_linux.tgz')
