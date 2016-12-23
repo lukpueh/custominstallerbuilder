@@ -78,7 +78,7 @@
       </td>
     </tr>
     <tr id="linux"> 
-      <td><a href="{{ installers.linux }}"><img src="{{ MEDIA_URL }}/img/linux.png" alt="linux" /></a><br /><a class="button" href="{{ installers.linux }}">Download installer<br />for Linux</a></td> 
+      <td><a href="{{ installers.linux }}"><img src="{{ MEDIA_URL }}/img/linux.png" alt="linux" /></a><br /><a class="button" href="{{ installers.linux }}">Download installer<br />for Linux</a><a class="button" href="{{ MEDIA_URL }}in-toto/linux_seattle.in_toto_bundle.tar">&#128274;  in-toto metadata</a></td>
       <td>
         <p><strong>Linux instructions</strong></p>
         
@@ -87,9 +87,15 @@
           <li>Extract the tarball to the directory in which you would like to install Seattle.</li> 
           <li>Navigate to that directory and run <code>./install.sh</code></li> 
         </ol>
-        
+        <p><strong>Alternative Linux instructions (in-toto)</strong></p>
+        <ol>
+          <li>Make sure to have <a href="https://github.com/in-toto/in-toto">in-toto</a> installed.</li>
+          <li>Download the Linux installer and in-toto metadata tarballs from here to the same directory on your computer.</li>
+          <li>Untar the in-toto metadata tarball.</li>
+          <li>Verify the Seattle installer's integrity (check the output of the following command) <br><code>in-toto-verify --layout linux_root.layout --layout-keys albert.pub</code> </li>
+          <li>The verification of the previous step extracted the seattle directory from the installer in order to inspect it. Now navigate to that directory and run <code>./install.sh</code></li>
+        </ol>
         <p>To check that Seattle is running, try running:<br /><code>ps -ef | grep nmmain.py | grep -v grep</code></p> 
-        
         <p>Note: You must have <a href="https://www.python.org/downloads/release/python-2712/">Python 2.7</a> installed.</p>
       </td>
     </tr>

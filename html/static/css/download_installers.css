@@ -61,7 +61,7 @@ table#downloads tr td:first-child {
 }
 
 table#downloads a.button {
-  margin: 0 auto;
+  margin: 2px auto;
 }
 
 table#downloads img {
