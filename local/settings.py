@@ -28,7 +28,6 @@ SECRET_KEY = '915oc2gqirhlewbafj0519999agjkn df,p9h.n1m,qjkwha9j8ohlukjb. '
 
 # Unless you are actively debugging, these should be set to False.
 DEBUG = True
-TEMPLATE_DEBUG = DEBUG
 
 # During testing, you may want to use Django's built-in static file server.
 SERVE_STATIC = False
@@ -45,3 +44,7 @@ MEDIA_URL = PROJECT_URL + 'static/'
 
 # The locations of the customized installers created by this program.
 CUSTOM_INSTALLER_URL = PROJECT_URL + 'static/installers/'
+
+# If you set DEBUG to False, you also need to properly set the ALLOWED_HOSTS
+# setting, eg.:
+# ALLOWED_HOSTS = ["example.com"]

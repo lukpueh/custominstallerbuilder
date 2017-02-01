@@ -21,8 +21,7 @@
 from SimpleXMLRPCServer import CGIXMLRPCRequestHandler
 
 from django.http import HttpResponse
-from django.shortcuts import render_to_response
-from django.template import RequestContext
+from django.shortcuts import render
 
 from custominstallerbuilder.xmlrpc.functions import PublicFunctions
 
@@ -46,16 +45,16 @@ def xmlrpc_handler(request):
   <Returns>
     A Django HTTP response.
   """
-  
+
   if request.method == 'GET':
-    response = render_to_response('xmlrpc-info.html', context_instance=RequestContext(request))    
+    response = render(request, 'xmlrpc-info.html')
 
   elif request.method == 'POST':
     # Not all languages have the notion of "None".
     xmlrpc_handler = CGIXMLRPCRequestHandler(allow_none=False, encoding=None)
     xmlrpc_handler.register_instance(PublicFunctions())
-  
-    response = HttpResponse(mimetype='application/xml')
+
+    response = HttpResponse(content_type='application/xml')
     response.write(xmlrpc_handler._marshaled_dispatch(request.body))
-    
+
   return response

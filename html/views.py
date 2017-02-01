@@ -26,11 +26,10 @@ except ImportError:
   import json
 
 from django.conf import settings
-from django.core.servers.basehttp import FileWrapper
 from django.core.urlresolvers import reverse
-from django.http import Http404, HttpResponse, HttpResponseRedirect
-from django.shortcuts import render_to_response
-from django.template import RequestContext
+from django.http import Http404, HttpResponse, HttpResponseRedirect, \
+    FileResponse
+from django.shortcuts import render
 
 import custominstallerbuilder.common.constants as constants
 import custominstallerbuilder.common.packager as packager
@@ -91,10 +90,10 @@ def require_post(function):
 ######################
 
 def TextResponse(message=''):
-  return HttpResponse(message, mimetype='text/plain')
+  return HttpResponse(message, content_type='text/plain')
 
 def ErrorResponse(message=''):
-  return HttpResponse(message, status=500, mimetype='text/plain')
+  return HttpResponse(message, status=500, content_type='text/plain')
 
 
 
@@ -137,8 +136,8 @@ def build_installers(request):
   try:
     manager = BuildManager(vessel_list=build_data['vessels'], user_data=user_data)
     build_results = manager.prepare()
-  except validations.ValidationError, e:
-    return ErrorResponse(e.message)
+  except validations.ValidationError as e:
+    return ErrorResponse(e)
   except:
     log_exception(request)
     return ErrorResponse('Unknown error occured while trying to build the installers.')
@@ -177,9 +176,9 @@ def save_state(request):
   """
   if 'build_string' not in request.POST:
     return ErrorResponse('Unable to save configuration.')
-    
+
   request.session['build_string'] = request.POST['build_string']
-    
+
   return TextResponse()
 
 
@@ -271,8 +270,8 @@ def add_user(request):
     if public_key is not None:
       validations.validate_public_key(public_key)
         
-  except validations.ValidationError, e:
-    return ErrorResponse(e.message)
+  except validations.ValidationError as e:
+    return ErrorResponse(e)
   except:
     log_exception(request)
     return ErrorResponse('Unknown error occured while trying to add user.')
@@ -352,7 +351,9 @@ def download_keys(request, build_id, key_type):
   # Generally, it is undesirable to serve files directly through django, but
   # the key bundles should be very small and still download quickly.
   bundle_filename = key_filenames[key_type]
-  response = HttpResponse(FileWrapper(file(bundle_filename)), content_type='application/zip')
+  # FileResponse is a subclass of StreamingHttpResponse optimized
+  # for binary files requires  Django >1.8
+  response = FileResponse(open(bundle_filename), content_type='application/zip')
   response['Content-Disposition'] = 'attachment; filename=' + os.path.split(bundle_filename)[1]
   response['Content-Length'] = os.path.getsize(bundle_filename)
   
@@ -387,12 +388,10 @@ def builder_page(request):
   <Returns>
     A Django response.
   """
-  return render_to_response('builder.html',
-    {
-      'step': 'build',
-    },
-    context_instance=RequestContext(request),
-  )
+  return render(request, 'builder.html',
+      {
+        'step': 'build',
+      })
 
 
 
@@ -433,15 +432,13 @@ def download_keys_page(request, build_id):
       has_private_keys = True
       break
 
-  return render_to_response('download_keys.html',
-    {
-      'build_id': build_id,
-      'has_private_keys': has_private_keys,
-      'keys_downloaded': keys_downloaded,
-      'step': 'keys',
-    },
-    context_instance=RequestContext(request)
-  )
+  return render(request, 'download_keys.html',
+      {
+        'build_id': build_id,
+        'has_private_keys': has_private_keys,
+        'keys_downloaded': keys_downloaded,
+        'step': 'keys',
+      })
 
 
 
@@ -465,7 +462,7 @@ def download_installers_page(request, build_id):
   """
 
   manager = BuildManager(build_id=build_id)
-	
+
   # Invalid build IDs should results in an error.
   if not os.path.isdir(manager.get_build_directory()):
     raise Http404
@@ -492,16 +489,14 @@ def download_installers_page(request, build_id):
       if 'fast_lane_build' in request.session['build_results'][build_id]:
         step = False
 
-  return render_to_response('download_installers.html',
-    {
-      'build_id': build_id,
-      'installers': installer_links,
-      'share_url': share_url,
-      'step': step,
-      'user_built': user_built,
-    },
-    context_instance=RequestContext(request)
-  )
+  return render(request, 'download_installers.html',
+      {
+        'build_id': build_id,
+        'installers': installer_links,
+        'share_url': share_url,
+        'step': step,
+        'user_built': user_built,
+      })
 
 
 
@@ -603,13 +598,13 @@ def fastlane_page(request):
       args=[build_id]))
 
 
-  return render_to_response('download_installers.html', {
+  return render(request, 'download_installers.html', {
       'fast_lane': True,
       'build_id': build_id,
       'installers': installer_links,
       'share_url': share_url,
       'keys_downloaded': keys_downloaded,
-    }, context_instance=RequestContext(request))
+    })
 
 
 
@@ -632,5 +627,7 @@ def error_page(request):
   
   # Automatically choose the email address of the first administrator given
   # in the settings file.
-  return render_to_response('error.html', {'email': settings.ADMINS[0][1]},
-                            context_instance=RequestContext(request))
+  return render(request, 'error.html',
+      {
+        'email': settings.ADMINS[0][1]
+      })
