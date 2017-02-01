@@ -24,7 +24,7 @@ from custominstallerbuilder.settings_base import *
 
 
 # Make this key a random string, and don't share it with anyone.
-SECRET_KEY = '***** This should be changed to a random string *****'
+SECRET_KEY = '915oc2gqirhlewbafj0519999agjkn df,p9h.n1m,qjkwha9j8ohlukjb. '
 
 # Unless you are actively debugging, these should be set to False.
 DEBUG = True
@@ -35,10 +35,10 @@ SERVE_STATIC = False
 STATIC_BASE = 'static/'
 
 # The base domain on which the server operates.
-BASE_URL = 'http://example.com/'
+BASE_URL = 'http://alpha-ch.poly.edu/'
 
 # The root directory of the Custom Installer Builder.
-PROJECT_URL = BASE_URL + 'custominstallerbuilder/'
+PROJECT_URL = BASE_URL + 'cib/'
 
 # The location of static media.
 MEDIA_URL = PROJECT_URL + 'static/'
