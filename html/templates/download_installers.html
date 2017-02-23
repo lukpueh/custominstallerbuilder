@@ -30,12 +30,12 @@
 {% endcomment %}
 
 <div class="section center">
-  <a class="share-url round_shadow" href="{{ share_url }}">{{ share_url }}</a>
-  <div>Right-click on the URL to copy the address, or scan the QR code below.</div>
+  <div>This address is your custom installer download URL. Use it when setting up Sensiblity Testbed on your Android device. (To save you some typing, you may scan the QR code that encodes the URL).</div>
+  <a class="share-url round_shadow" href="{{ installers.android }}">{{ installers.android }}</a>
   <div id="qrcode"></div>
   <script type="text/javascript">
     new QRCode(document.getElementById("qrcode"), {
-        text: "{{ share_url }}",
+        text: "{{ installers.android }}",
         width: 128,
         height: 128
     });
@@ -67,18 +67,21 @@
   <table id="downloads"> 
   <tr id="android">
       <td>
-<a href="market://details?id=com.sensibility_testbed&referrer=utm_source%3D{{ installers.android }}%26utm_medium%3Ddownload%26utm_content%3Dcustom_builder%26utm_campaign%3Dseattle?"><img src="{{ MEDIA_URL }}/img/android.png" alt="android" /></a><br /><a class="button" href="market://details?id=com.sensibility_testbed&referrer=utm_source%3D{{ installers.android }}%26utm_medium%3Ddownload%26utm_content%3Dcustom_builder%26utm_campaign%3Dseattle?">Install via<br />Google Play</a></td> 
+<img src="{{ MEDIA_URL }}/img/android.png" alt="android" /></td>
       <td>
         <p><strong>Android instructions</strong></p>
+        <p>Perform the following steps on your Android device.</p>
         <ol> 
-        <li>Open this web page on your Android device.
-        <li>Install SL4A which is a library that Sensibility Testbed requires. SL4A is available from <a href="https://github.com/kuri65536/sl4a/releases">GitHub</a>. (The &quot;<samp>arm</samp>&quot; version works for most smartphones and tablets).</li>
-         <li>If your device is running a <em>version of Android below 5</em>, tap the &quot;Android&quot; icon to the left to download Sensibility Testbed via Google Play. (If that doesn't work, please try <a href="https://play.google.com/store/apps/details?id=com.sensibility_testbed&referrer=utm_source%3D{{ installers.android }}%26utm_medium%3Ddownload%26utm_content%3Dcustom_builder%26utm_campaign%3Dseattle?">this alternative link</a>.)</li>
-         <li>If you are running Android 5 (&quot;Lollipop&quot;), 6 (&quot;Marshmallow&quot;), or 7 (&quot;Nougat&quot;), please use our <a href="market://details?id=com.sensibility_testbed_BETA&referrer=utm_source%3D{{ installers.android }}%26utm_medium%3Ddownload%26utm_content%3Dcustom_builder%26utm_campaign%3Dseattle?">updated BETA installer</a>!</li>
-          <li>In the Google Play app, tap Install and review the requested permissions.</li> 
-          <li>Start the app and follow the on-screen instructions to complete the installation. Depending on the speed of your device, the process can take a few minutes to finish.</li> 
+        <li>Ensure that your Android device runs Android version 5 (&quot;Lollipop&quot;) or higher!</li>
+        <li>Configure your device to allow installation from untrusted sources.</li>
+        <li>Download the development build of Sensibility Testbed from <a href="https://github.com/aaaaalbert/sensibility-bindump/raw/master/app-debug.apk
+">here</a>.</li>
+        <li>Open the downloaded APK to install it.</li>
+        <li>Start the app, and tap the &quot;Install Python&quot; button. Allow the process a few seconds to complete.</li>
+        <li>Put the installer download URL from above into the textbox below the &quot;Install from this URL&quot; button. (You may scan the QR code above to save you the typing.)</li>
+        <li>Tap the &quot;Install from this URL&quot; button to benchmark your device and configure Sensibility Testbed's cryptography for your device. Depending on the speed of your device, the process can take a minute or two to finish.</li>
+        <li>Finally, tap the &quot;Start&quot; button to start the Sensibility Testbed node manager.</li>
         </ol>
-        <p>To check that Sensibility Testbed is running, look at the Sensibility Testbed application window.</code></p> 
 <br />
       </td>
     </tr>
