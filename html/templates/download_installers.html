@@ -5,6 +5,41 @@
 <link rel="stylesheet" href="{{ MEDIA_URL }}css/download_installers.css" />
 <script type="text/javascript" src="{{ MEDIA_URL}}js/qrcode.min.js"></script>
 
+
+<script type="text/javascript">
+  $(document).ready(function(){
+
+    // Define a mapping between DOM elements (by class) and their URL
+    var element_url_map = {
+      {% comment %} FIXME: Make this URL point to the playstore! {% endcomment %}
+      ".app-playstore-url" : "https://github.com/aaaaalbert/sensibility-bindump/raw/master/app-debug.apk",
+      ".app-apk-url" : "https://github.com/aaaaalbert/sensibility-bindump/raw/master/app-debug.apk",
+      ".custominstaller-url" : "{{ installers.android }}"
+    }
+
+
+    // Iterate over the map to append QR code and link to URL
+    // NOTE: WE expect the elements to have to children, a div with class
+    // .qr code, and an anchor element
+    $.each(element_url_map, function(element, url) {
+
+      // Add QR codes
+      new QRCode($(element + " .qrcode").get(0), {
+        text: url,
+        width: 128,
+        height: 128
+      });
+      // Set links
+      $(element + " a").attr("href", url);
+    });
+    // The apk URL is for developers, let's show them the whole url as
+    // button text
+    $(".app-apk-url a").html(element_url_map[".app-apk-url"]);
+
+  });
+
+</script>
+
 {# comment: On the fast lane we have installers and keys on one page #}
 {% if fast_lane %}
 <link rel="stylesheet" href="{{ MEDIA_URL }}css/download_keys.css" />
@@ -29,112 +64,60 @@
 </div>
 {% endcomment %}
 
-<div class="section center">
-  <div>This address is your custom installer download URL. Use it when setting up Sensiblity Testbed on your Android device. (To save you some typing, you may scan the QR code that encodes the URL).</div>
-  <a class="share-url round_shadow" href="{{ installers.android }}">{{ installers.android }}</a>
-  <div id="qrcode"></div>
-  <script type="text/javascript">
-    new QRCode(document.getElementById("qrcode"), {
-        text: "{{ installers.android }}",
-        width: 128,
-        height: 128
-    });
-  </script>
-</div>
 
+<div class="section">
+  <h2>Get Sensibility Testbed from Google Play</h2>
+    <p>Use below button (or QRcode) to install the app from Google Play. That's really all you need to get Sensibility Testbed onto your phone. Once you start the app, everything will be setup for you. All that's left is to download your experimenter keys (next section) and you are ready to perform experiments!</p>
+    <p class="note">Note: Sensibility Testbed currently only runs on ARM powered devices with Android 5 (&quot;Lollipop&quot;) or higher. We are striving to support more platforms in the future!</p>
+    <div class="app-playstore-url center">
+      <div class="qrcode"></div>
+      <a class="button" href="">Download app from Google Play (XXX NOT YET ON GOOGLE PLAY)</a>
+    </div>
+</div>
 
 {% if fast_lane %}
 <div class="section">
-  <h2>Download user keys</h2>
-  <p>For your reference, the Custom Installer Builder has generated ZIP archives of cryptographic keys associated with your installer. Once your browsing session expires, you cannot access these keys again.</p>
-
-  <table>
-    <tr id="private_keys">
-      <td><a id="download_private_keys" class="button key {% if keys_downloaded.private %}checked{% endif %}" href="{% url 'download-keys' build_id=build_id key_type='private' %}">Download private keys</a></td>
-    </tr>
-    <tr id="public_keys">
-      <td><a id="download_public_keys" class="button key {% if keys_downloaded.public %}checked{% endif %}" href="{% url 'download-keys' build_id=build_id key_type='public' %}">Download public keys</a></td>
-    </tr>
-  </table>
-
+  <h2>Download Experimenter Keys</h2>
+  <p>We have generated ZIP archives of cryptographic keys associated with your app installation. You need these keys to access the sandbox running on your phone from the experimenter interface. More on that later. For now, just click on the buttons below to download the keys to your computer.</p>
+  <div class="center">
+    <span id="private_keys">
+      <a id="download_private_keys" class="button key {% if keys_downloaded.private %}checked{% endif %}" href="{% url 'download-keys' build_id=build_id key_type='private' %}">Download private keys</a>
+    </span>
+    <span id="public_keys">
+      <a id="download_public_keys" class="button key {% if keys_downloaded.public %}checked{% endif %}" href="{% url 'download-keys' build_id=build_id key_type='public' %}">Download public keys</a></span>
+  </div>
 </div>
 {% endif %} {# comment: endif fast_lane #}
 
+
+
 <div class="section">
-  <h2>Download installers</h2>
-  <p>Installers are provided for Android, Linux, Mac OS X, and Windows.</p>
-  
-  <table id="downloads"> 
-  <tr id="android">
-      <td>
-<img src="{{ MEDIA_URL }}/img/android.png" alt="android" /></td>
-      <td>
-        <p><strong>Android instructions</strong></p>
-        <p>Perform the following steps on your Android device.</p>
-        <ol> 
-        <li>Ensure that your Android device runs Android version 5 (&quot;Lollipop&quot;) or higher!</li>
-        <li>Configure your device to allow installation from untrusted sources.</li>
-        <li>Download the development build of Sensibility Testbed from <a href="https://github.com/aaaaalbert/sensibility-bindump/raw/master/app-debug.apk
-">here</a>.</li>
-        <li>Open the downloaded APK to install it.</li>
-        <li>Start the app, and tap the &quot;Install Python&quot; button. Allow the process a few seconds to complete.</li>
-        <li>Put the installer download URL from above into the textbox below the &quot;Install from this URL&quot; button. (You may scan the QR code above to save you the typing.)</li>
-        <li>Tap the &quot;Install from this URL&quot; button to benchmark your device and configure Sensibility Testbed's cryptography for your device. Depending on the speed of your device, the process can take a minute or two to finish.</li>
-        <li>Finally, tap the &quot;Start&quot; button to start the Sensibility Testbed node manager.</li>
-        </ol>
-<br />
-      </td>
-    </tr>
-    <tr id="spacer"><td><hr></td><td><hr></td></tr>
-    <tr id="spacer"><td><strong>Note</strong></td><td><strong>Sensibility Testbed currently does not support sensor access on the platforms listed below!</strong><br>You may still install Sensibility Testbed to run non-sensor related code.</td></tr>
-    <tr id="linux"> 
-      <td><a href="{{ installers.linux }}"><img src="{{ MEDIA_URL }}/img/linux.png" alt="linux" /></a><br /><a class="button" href="{{ installers.linux }}">Download installer<br />for Linux</a></td> 
-      <td>
-        <p><strong>Linux instructions</strong></p>
-        
-        <ol> 
-          <li>Download the Sensibility Testbed tarball to your computer.</li> 
-          <li>Extract the tarball to the directory in which you would like to install Sensibility Testbed.</li> 
-          <li>Navigate to that directory and run <code>./install.sh</code></li> 
-        </ol>
-        
-        <p>To check that Sensibility Testbed is running, try running:<br /><code>ps -ef | grep nmmain.py | grep -v grep</code></p> 
-        
-        <p>Note: You must have <a href="https://www.python.org/downloads/release/python-2712/">Python 2.7</a> installed.</p>
-      </td>
-    </tr>
-    <tr id="mac"> 
-      <td><a href="{{ installers.mac }}"><img src="{{ MEDIA_URL }}/img/mac.png" alt="mac" /></a><br /><a class="button" href="{{ installers.mac }}">Download installer<br />for Mac</a></td> 
-      <td>
-        <p><strong>Mac instructions</strong></p>
-        
-        <ol> 
-          <li>Download the Sensibility Testbed tarball to your computer.</li> 
-          <li>Extract the tarball to the directory in which you would like to install Sensibility Testbed.</li> 
-          <li>Navigate to that directory and run <code>./install.sh</code></li> 
-        </ol>
-        
-        <p>To check that Sensibility Testbed is running, try running:<br /><code>ps Aww | grep nmmain.py | grep -v grep</code></p> 
-        
-        <p>Note: You must have <a href="https://www.python.org/downloads/release/python-2712/">Python 2.7</a> installed.</p>
-      </td> 
-    </tr>
-    <tr id="win"> 
-      <td><a href="{{ installers.windows }}"><img src="{{ MEDIA_URL }}/img/windows.png" alt="windows" /></a><br /><a class="button" href="{{ installers.windows }}">Download installer<br />for Windows</a></td> 
-      <td>
-        <p><strong>Windows instructions</strong></p>
-        
-        <ol> 
-          <li>Download the Sensibility Testbed ZIP file to your computer.</li> 
-          <li>Extract the ZIP file to the directory in which you would like to install Sensibility Testbed.</li> 
-          <li>Double-click <code>install.bat</code> or run it from the command line.</li> 
-        </ol>
-        
-        <p>To check that Sensibility Testbed is running, look in Task Manager for the process pythonw.exe.</p>
-      </td> 
-    </tr>
-  </table>
-  
-  
+  <h2>Installation Alternative (manual)</h2>
+  <p>For development purposes we also provide a manual installation procedure. This includes installing the app from an .APK file, and downloading and installing the custom installer from a URL specified in the app. Perform the following steps on your Android device:</p>
+
+  <ol>
+    <li>Configure your device to allow installation from untrusted sources.</li>
+    <li>Download the .APK file using the button (or QRcode) below.</li>
+    <li>Open the downloaded APK to install it.</li>
+    <li>The app will tell you that the custom installer is missing. This is because you did not install it via Google Play.</li>
+    <li>Now click the debug tap in the app and paste the custom installer URL from below into the textbox. Again, you may scan the QR code to save you the typing.</li>
+    <li>Tap the &quot;Install&quot; button to benchmark your device and configure Sensibility Testbed's cryptography for your device. Depending on the speed of your device, the process can take a minute or two to finish.</li>
+    <li>Finally, tap the &quot;Start&quot; button to start the Sensibility Testbed node manager.</li>
+  </ol>
+
+  <div class="center">
+    <div class="app-apk-url half">
+      <h3>.APK file URL</h3>
+      <div class="qrcode"></div>
+      <a class="share-url" href="">Download .APK file</a>
+    </div><div class="custominstaller-url half">
+      <h3>Custom Installer URL</h3>
+      <div class="qrcode"></div>
+      <a class="share-url" href="">{{ installers.android }}</a>
+    </div>
+  </div>
+
 </div>
+
+
 {% endblock %}

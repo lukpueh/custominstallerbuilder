@@ -35,55 +35,21 @@
   word-break: break-all;
 }
 
-#qrcode img {
-  margin: 2em auto;
-}
 
-
-table#downloads {
-  margin-left: 5%;
-  
-  border-spacing: 0;
-  border-collapse: collapse;
-}
-
-table#downloads tr td {
-  font-size: 11pt;
-  padding: 2.5em 0;
-  
-  vertical-align: top;
-}
-
-table#downloads tr td:first-child {
-  padding-right: 4em;
-  
-  text-align: center;
-}
-
-table#downloads a.button {
-  margin: 0 auto;
-}
-
-table#downloads img {
-  margin-bottom: 1.5em;
+.qrcode img {
+  margin: 1em auto;
 }
 
 ol {
   list-style-type: decimal;
-  
+
   padding-left: 3em;
   margin-bottom: 1em;
 }
 
-code {
+.half {
+  /*float: left;*/
   display: inline-block;
-  border: 1px solid #ddd;
-  
-  background-color: #fcfcfc;
-  margin: 0.4em;
-  padding: 0.4em;
-  
-  -webkit-border-radius: 2px;
-  -moz-border-radius: 2px;
-  border-radius: 2px;
+  width: 50%;
+  vertical-align:top;
 }
