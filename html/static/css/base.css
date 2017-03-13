@@ -58,7 +58,10 @@ h1 span {
 }
 
 div.section {
-  margin: 80px 0 140px 0;
+  margin: 40px 0 40px 0;
+}
+div.section#manual-install {
+  margin-top: 200px;
 }
 
 div.section h2 {

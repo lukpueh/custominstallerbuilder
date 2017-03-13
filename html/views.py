@@ -491,6 +491,8 @@ def download_installers_page(request, build_id):
       step = 'installers'
       user_built = True
 
+      # TODO: For better user feedback it would be nice to know if this is
+      # a fast_lane_build even if we don't have the session.
       if 'fast_lane_build' in request.session['build_results'][build_id]:
         fast_lane = True
 

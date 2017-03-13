@@ -41,7 +41,7 @@ TEMPLATES = [
                 # Adds 'TIME_ZONE' to template context
                 # 'django.template.context_processors.tz',
                 # Adds 'request' to template context
-                # 'django.template.context_processors.request',
+                'django.template.context_processors.request',
                 # Adds 'messages' and 'DEFAULT_MESSAGE_LEVELS' to context
                 #'django.contrib.messages.context_processors.messages',
             ],

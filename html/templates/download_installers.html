@@ -68,25 +68,26 @@
 </div> -->
 {% endcomment %}
 
+
+
 <div class="section">
-  <h2>Get Sensibility Testbed from Google Play</h2>
-    <p>Use below button (or QRcode) to install the app from Google Play. That's really all you need to get Sensibility Testbed onto your phone. Once you start the app, everything will be setup for you. All that's left is to download your experimenter keys (next section) and you are ready to perform experiments!</p>
-    <p class="note">Note: Sensibility Testbed currently only runs on ARM powered devices with Android 5 (&quot;Lollipop&quot;) or higher. We are striving to support more platforms in the future!</p>
-    <div class="app-playstore-url center">
-      <div class="qrcode"></div>
-      <a class="button" href="">Download app from Google Play</a>
-    </div>
+  <p>Sensibility Testbed runs in a sandboxed environment on your Android device. In order to conduct your sensor experiments you need a pair of cryptographic keys that is associated with your device. But don't worry, by browsing to this page you have already created your very own custom Sensibility installer and the according keys. All that's left to do is to click on the right buttons below. <br>Learn more about Sensibility Testbed by reading the <a href="https://github.com/SensibilityTestbed/instructions/blob/master/README.md">usage guides</a>.</p>
+
+  {% if fast_lane %}
+    <p>Note that the keys below are only available in this browser session, if the session expires or you open the URL on a different device, we will not let you download the keys anymore, for your own good!</p>
+  {% else %}
+    <p>For security reasons we don't show the cryptographic keys associated with the custom installer on this page. If you haven't downloaded your keys earlier, you should start over, by going back to the <a href="{{request.scheme}}://{{request.get_host}}{% url 'fastlane_page' %}">custom installer builder fast lane</a>.</p>
+  {% endif %}
 </div>
 
 {% comment %}
 We only show the keys if this is a fast_lane page and the custom installer
 was created in this session.
 {% endcomment %}
-
 {% if fast_lane and user_built %}
 <div class="section">
   <h2>Download Experimenter Keys</h2>
-  <p>We have generated ZIP archives of cryptographic keys associated with your app installation. You need these keys to access the sandbox running on your phone from the experimenter interface. More on that later. For now, just click on the buttons below to download the keys to your computer.</p>
+  <p>Please download these keys to your laptop or desktop computer! You will need them in order to run experiments on your device using <a href="https://github.com/SensibilityTestbed/instructions/blob/master/Setup.md">seash</a>.</p>
   <div class="center">
     <span id="private_keys">
       <a id="download_private_keys" class="button key {% if keys_downloaded.private %}checked{% endif %}" href="{% url 'download-keys' build_id=build_id key_type='private' %}">Download private keys</a>
@@ -100,6 +101,16 @@ was created in this session.
 
 
 <div class="section">
+  <h2>Get Sensibility Testbed from Google Play</h2>
+    <p>Please use below button or QR code to install the app from Google Play. By using this link we can tell Google Play to serve you your custom Sensibility installation.</p>
+    <div class="app-playstore-url center">
+      <div class="qrcode"></div>
+      <a class="button" href="">Download app from Google Play</a>
+    </div>
+</div>
+
+
+<div id="manual-install" class="section">
   <h2>Installation Alternative (manual)</h2>
   <p>For development purposes we also provide a manual installation procedure. This includes installing the app from an .APK file, and downloading and installing the custom installer from a URL specified in the app. Perform the following steps on your Android device:</p>
 
@@ -112,7 +123,6 @@ was created in this session.
     <li>Tap the &quot;Install&quot; button to benchmark your device and configure Sensibility Testbed's cryptography for your device. Depending on the speed of your device, the process can take a minute or two to finish.</li>
     <li>Finally, tap the &quot;Start&quot; button to start the Sensibility Testbed node manager.</li>
   </ol>
-
   <div class="center">
     <div class="app-apk-url half">
       <h3>.APK file URL</h3>
