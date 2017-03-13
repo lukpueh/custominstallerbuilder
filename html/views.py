@@ -448,6 +448,9 @@ def download_installers_page(request, build_id):
   """
   <Purpose>
     Renders the installer package download page.
+    If the custom installer was built on the fastlane page in the same session
+    we also display public and private key.
+
   <Arguments>
     request:
       A Django request.
@@ -463,7 +466,7 @@ def download_installers_page(request, build_id):
 
   manager = BuildManager(build_id=build_id)
 
-  # Invalid build IDs should results in an error.
+  # Invalid build IDs should result in an error.
   if not os.path.isdir(manager.get_build_directory()):
     raise Http404
     
@@ -475,19 +478,30 @@ def download_installers_page(request, build_id):
   # in the share-this-URL box.
   share_url = request.build_absolute_uri().split('?')[0]
   
-  # Only show the progress bar if the user has built this installer himself.
+  # Only show the breadcrumbs if the user has built this installer himself.
   # Otherwise, we assume the user has shared this link with a friend.
   step = None
   user_built = False
-  
+
+  fast_lane = False
+  keys_downloaded = {}
+
   if 'build_results' in request.session:
     if build_id in request.session['build_results']:
       step = 'installers'
       user_built = True
 
-      # If we serve a fast_lane_build we don't show the breadcrumbs
       if 'fast_lane_build' in request.session['build_results'][build_id]:
+        fast_lane = True
+
+        # We don't show the breadcrumbs in a fast lane build
         step = False
+
+        # But we show the keys, and whether they have already been downloaded
+        # in this session.
+        keys_downloaded = request.session['build_results'][build_id].get(
+            'keys_downloaded', dict())
+
 
   return render(request, 'download_installers.html',
       {
@@ -496,8 +510,9 @@ def download_installers_page(request, build_id):
         'share_url': share_url,
         'step': step,
         'user_built': user_built,
+        'fast_lane': fast_lane,
+        'keys_downloaded': keys_downloaded  # Use only if fast_lane is true
       })
-
 
 
 
@@ -505,23 +520,25 @@ def download_installers_page(request, build_id):
 def fastlane_page(request):
   """
   <Purpose>
-    Renders a key and installer download page for a
-    default user-built seattle build, i.e.:
-      One 80 per-cent vessel, one owner/user
+    Creates a custom installer for a default user
+    (one 80 per-cent vessel, one owner/user) if it does not yet exist in
+    this session.  Then redirects to the download installer view, which shows
+    the installer link as if were an interactive build and additionally the
+    keys (but only if the installer was created in this session).
 
-      Note: 
-      owner/user-name can be set in settings.FASTLANE_USER_NAME
   <Arguments>
     request:
       A Django request.
+
   <Exceptions>
     None.
+
   <Side Effects>
     If new session
     - Creates and stores vesselinfo to appropriate location on disk
     - Stores generated key pair to session (memory)
   <Returns>
-    A Django response.
+    A Django redirect to the download page.
   """
 
   try:
@@ -530,6 +547,9 @@ def fastlane_page(request):
     # We have to check if the user already has a build result in his session
     # and make sure it's a fastlane build, i.e.
     # it does not collide with a build from the interactive CIB
+
+    # Iterate over existing build_result dictionaries and pick the first
+    # (should at most be one) that has "fast_lane_build" set true
     if 'build_results' in request.session.keys():
       for val in request.session['build_results'].values():
         if isinstance(val, dict) and val.get("fast_lane_build"):
@@ -537,21 +557,19 @@ def fastlane_page(request):
           break
     else:
       # This dict will only be saved if the build succeeds
+      # TODO: I wonder why I put this here and not under the else below, let's
+      # revisit this later.
       request.session['build_results'] = {}
 
 
     if existing_build_result:
-      # There is no need to build again, let's serve what's already there
+      # If we have an existing build, we just grab the id and forward to
+      # the download page below
       build_id = existing_build_result.get('build_id')
-      keys_downloaded = existing_build_result.get('keys_downloaded', dict())
-
-      # The manager helps us to find the files stored to disk
-      manager = BuildManager(build_id=build_id)
-      installer_links = manager.get_urls()
 
     else:
-      # The user is here for the first time
-      # Create basic installation setup (1 owner, 1 vessel, no users)
+      # If no build exists, we create a basic custom installer
+      # i.e.: 1 owner, 1 vessel, no users
       users = {
         settings.FASTLANE_USER_NAME: {u'public_key': None}
         }
@@ -571,11 +589,6 @@ def fastlane_page(request):
       # These are needed in the HTML template to render the proper links
       # to the keys and installer
       build_id = manager.build_id
-      installer_links = manager.get_urls()
-
-      # Used in template to display check marks next to buttons
-      # The keys are new so they cannot have been downloaded
-      keys_downloaded = False
 
       # This prevents collision when using interactive CIB and fastlane CIB
       # in the same session
@@ -594,18 +607,8 @@ def fastlane_page(request):
                          ' trying to build the installers.')
 
   # Builds share_url by using view URLreversing and the request object
-  share_url = request.build_absolute_uri(reverse('download-installers-page', 
+  return HttpResponseRedirect(reverse('download-installers-page',
       args=[build_id]))
-
-
-  return render(request, 'download_installers.html', {
-      'fast_lane': True,
-      'build_id': build_id,
-      'installers': installer_links,
-      'share_url': share_url,
-      'keys_downloaded': keys_downloaded,
-    })
-
 
 
 

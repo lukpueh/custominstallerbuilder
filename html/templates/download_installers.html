@@ -48,9 +48,13 @@
 {% endblock %}
 
 {% block content %}
-<!-- Un-Django-comment the block below to style the page differently depending on whether the person that built this installer sees it (`user_built==True`), or the person comes in via a shared link. We currently disable this to always show a QR code for this page. -->
+
 {% comment %}
-<div class="section center">
+ Un-Django-and-un-HTML-comment the block below to style the page differently depending on whether the person that built this installer sees it (`user_built==True`), or the person comes in via a shared link. We currently disable this to always show a QR code for this page.
+ {% endcomment %}
+
+{% comment %}
+<!-- <div class="section center">
   {% if user_built %}
     <h2>Your installers are ready!</h2>
     <p>Bookmark this page to come back later, or share this URL with others:</p>
@@ -61,9 +65,8 @@
     <h2>Thanks for contributing!</h2>
     <p>The installers below have been customized by a Seattle user. By running these installers, 10% of your computing resources will be donated to an experiment being run by that user.</p>
   {% endif %}
-</div>
+</div> -->
 {% endcomment %}
-
 
 <div class="section">
   <h2>Get Sensibility Testbed from Google Play</h2>
@@ -75,7 +78,12 @@
     </div>
 </div>
 
-{% if fast_lane %}
+{% comment %}
+We only show the keys if this is a fast_lane page and the custom installer
+was created in this session.
+{% endcomment %}
+
+{% if fast_lane and user_built %}
 <div class="section">
   <h2>Download Experimenter Keys</h2>
   <p>We have generated ZIP archives of cryptographic keys associated with your app installation. You need these keys to access the sandbox running on your phone from the experimenter interface. More on that later. For now, just click on the buttons below to download the keys to your computer.</p>
